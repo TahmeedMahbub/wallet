@@ -15,10 +15,10 @@
         @endif
 
         @if ($loginFailed)
-            <x-info variant="bad">{{ $isThrottled ? $emailError : 'Email or password is not correct. Please try again.' }}</x-info>
+            <x-info variant="bad">{{ $isThrottled ? $emailError : 'Email, username or password is not correct. Please try again.' }}</x-info>
         @endif
 
-        <x-field label="EMAIL" name="email" type="email" placeholder="you@example.com" autocomplete="email" :invalid="$loginFailed" :autofocus="! $loginFailed" />
+        <x-field label="EMAIL OR USERNAME" name="email" type="text" placeholder="Email or username" autocomplete="username" autocapitalize="none" :invalid="$loginFailed" :autofocus="! $loginFailed" />
         <x-field label="PASSWORD" name="password" type="password" placeholder="Your password" autocomplete="current-password" :invalid="$loginFailed" />
 
         <div class="flex justify-end">

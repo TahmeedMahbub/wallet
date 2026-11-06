@@ -26,11 +26,22 @@ class RegistrationTest extends TestCase
     {
         return array_merge([
             'name' => 'Sahara',
+            'username' => 'sahara_'.substr(uniqid(), -6),
             'email' => 'New.User+'.uniqid().'@Example.com',
             'password' => 'a-long-password',
             'password_confirmation' => 'a-long-password',
             'terms' => '1',
         ], $overrides);
+    }
+
+    public function test_username_must_be_unique_and_use_allowed_characters(): void
+    {
+        $existing = User::factory()->create();
+
+        $this->post('/register', $this->validInput(['username' => strtoupper($existing->username)]))->assertSessionHasErrors('username');
+        $this->post('/register', $this->validInput(['username' => 'has space']))->assertSessionHasErrors('username');
+        $this->post('/register', $this->validInput(['username' => 'a@b']))->assertSessionHasErrors('username');
+        $this->post('/register', $this->validInput(['username' => 'ab']))->assertSessionHasErrors('username');
     }
 
     public function test_the_registration_screen_is_shown_to_guests(): void

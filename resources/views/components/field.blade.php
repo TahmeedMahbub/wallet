@@ -2,6 +2,8 @@
     'label',
     'name',
     'type' => 'text',
+    'size' => 'regular',
+    'money' => false,
     'placeholder' => '',
     'autocomplete' => null,
     'autofocus' => false,
@@ -13,15 +15,21 @@
     $error = $errors->first($name);
     $hasError = $error !== '' || $invalid;
     $isPassword = $type === 'password';
+    $isAmount = $size === 'amount';
     $inputValue = $isPassword ? null : ($value ?? old($name));
 @endphp
 
-{{-- Figma "Field" (Regular): label, 48px box, optional helper line in the Error state. --}}
-<div class="flex flex-col gap-6" @if ($isPassword) x-data="{ show: false }" @endif>
+{{-- Figma "Field": Regular (48px) and Amount (64px, 28px bold), with an Error state and helper line. --}}
+<div
+    class="flex flex-col gap-6"
+    @if ($isPassword) x-data="{ show: false }" @elseif ($money) x-data="moneyField()" @endif
+>
     <label for="{{ $name }}" class="text-12 font-semibold leading-17 tracking-label text-grey-700">{{ $label }}</label>
 
     <div @class([
-        'flex h-48 items-center justify-between gap-8 rounded-12 border border-solid bg-grey-0 px-14',
+        'flex items-center justify-between gap-8 rounded-12 border border-solid bg-grey-0 px-14',
+        'h-64' => $isAmount,
+        'h-48' => ! $isAmount,
         'border-red-700' => $hasError,
         'border-grey-300 focus-within:border-2 focus-within:border-blue-600' => ! $hasError,
     ])>
@@ -29,14 +37,19 @@
             id="{{ $name }}"
             name="{{ $name }}"
             @if ($isPassword) x-bind:type="show ? 'text' : 'password'" @endif
-            type="{{ $type }}"
+            type="{{ $money ? 'text' : $type }}"
+            @if ($money) inputmode="decimal" x-on:input="format($el)" @endif
             @if ($inputValue !== null) value="{{ $inputValue }}" @endif
             placeholder="{{ $placeholder }}"
             @if ($autocomplete) autocomplete="{{ $autocomplete }}" @endif
             @if ($autofocus) autofocus @endif
             @if ($hasError) aria-invalid="true" @endif
             @if ($error !== '') aria-describedby="{{ $name }}-error" @endif
-            {{ $attributes->class('min-w-0 flex-1 bg-transparent text-15 leading-21 text-grey-900 outline-none placeholder:text-grey-500') }}
+            {{ $attributes->class([
+                'min-w-0 flex-1 bg-transparent text-grey-900 outline-none placeholder:text-grey-500',
+                'text-28 font-bold leading-39' => $isAmount,
+                'text-15 leading-21' => ! $isAmount,
+            ]) }}
         >
 
         @if ($isPassword)

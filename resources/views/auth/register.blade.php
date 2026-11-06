@@ -5,6 +5,7 @@
         <x-auth-hero title="Create your Wallet" :logo="56" :padding-top="40">Track income, spending, savings and dues in one place.</x-auth-hero>
 
         <x-field label="YOUR NAME" name="name" placeholder="Name shown on Home" autocomplete="name" :autofocus="true" />
+        <x-field label="USERNAME" name="username" placeholder="Used to log in" autocomplete="username" autocapitalize="none" />
         <x-field label="EMAIL" name="email" type="email" placeholder="you@example.com" autocomplete="email" />
         <x-field label="PASSWORD" name="password" type="password" placeholder="At least 8 characters" autocomplete="new-password" />
         <x-field label="CONFIRM PASSWORD" name="password_confirmation" type="password" placeholder="Type it again" autocomplete="new-password" />

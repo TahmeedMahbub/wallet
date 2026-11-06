@@ -17,6 +17,23 @@ class LoginTest extends TestCase
         $this->withoutVite();
     }
 
+    public function test_a_user_can_log_in_with_their_username_in_any_letter_case(): void
+    {
+        $user = User::factory()->create();
+
+        $this->post('/login', ['email' => strtoupper($user->username), 'password' => 'password'])->assertRedirect('/');
+        $this->assertAuthenticatedAs($user);
+    }
+
+    public function test_a_wrong_password_with_a_username_fails_like_an_unknown_username(): void
+    {
+        $user = User::factory()->create();
+
+        $this->from('/login')->post('/login', ['email' => $user->username, 'password' => 'nope'])->assertSessionHasErrors('email');
+        $this->from('/login')->post('/login', ['email' => 'nobody_'.uniqid(), 'password' => 'nope'])->assertSessionHasErrors('email');
+        $this->assertGuest();
+    }
+
     public function test_the_login_screen_is_shown_to_guests(): void
     {
         $this->get('/login')
@@ -58,7 +75,7 @@ class LoginTest extends TestCase
 
         $this->followingRedirects()->from('/login')
             ->post('/login', ['email' => $user->email, 'password' => 'not-the-password'])
-            ->assertSee('Email or password is not correct. Please try again.');
+            ->assertSee('Email, username or password is not correct. Please try again.');
     }
 
     public function test_login_is_blocked_after_five_failed_attempts(): void

@@ -2,7 +2,7 @@
 
 <li class="flex min-w-px flex-1">
     <a
-        href="{{ $tab['href'] }}"
+        href="{{ $tab['href'] }}" wire:navigate
         @if ($current) aria-current="page" @endif
         class="flex min-w-px flex-1 flex-col items-center gap-4 py-8"
     >

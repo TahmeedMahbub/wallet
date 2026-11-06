@@ -6,12 +6,12 @@
      * active icons turn blue. Reproduced as designed; flagged for the client.
      */
     $leftTabs = [
-        'home' => ['label' => 'Home', 'icon' => 'home', 'href' => '#', 'activeIconClass' => 'text-grey-700'],
-        'reports' => ['label' => 'Reports', 'icon' => 'reports', 'href' => '#'],
+        'home' => ['label' => 'Home', 'icon' => 'home', 'href' => route('home'), 'activeIconClass' => 'text-grey-700'],
+        'reports' => ['label' => 'Reports', 'icon' => 'reports', 'href' => route('reports')],
     ];
     $rightTabs = [
-        'savings' => ['label' => 'Savings', 'icon' => 'savings', 'href' => '#'],
-        'dues' => ['label' => 'Dues', 'icon' => 'dues', 'href' => '#'],
+        'savings' => ['label' => 'Savings', 'icon' => 'savings', 'href' => route('savings')],
+        'dues' => ['label' => 'Dues', 'icon' => 'dues', 'href' => route('dues')],
     ];
 @endphp
 

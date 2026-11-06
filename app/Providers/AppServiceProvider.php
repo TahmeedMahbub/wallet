@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -22,6 +23,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if ($this->app->isProduction()) {
+            URL::forceHttps();
+        }
+
         // A reset password signs the user out everywhere, including a thief's session.
         Event::listen(PasswordReset::class, function (PasswordReset $event): void {
             if (config('session.driver') === 'database') {

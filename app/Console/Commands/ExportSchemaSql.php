@@ -50,11 +50,13 @@ class ExportSchemaSql extends Command
 
             if ($rows->isNotEmpty()) {
                 $values = $rows
-                    ->map(fn (object $row): string => '('.DB::getPdo()->quote($row->migration).', '.(int) $row->batch.')')
-                    ->implode(",\n  ");
+                    ->unique('migration')
+                    ->map(fn (object $row): string => 'SELECT '.DB::getPdo()->quote($row->migration).' AS `migration`, '.(int) $row->batch.' AS `batch`')
+                    ->implode("\n  UNION ALL ");
 
                 $sql[] = '-- Migrations log, so `php artisan migrate` knows these are already applied.';
-                $sql[] = "INSERT INTO `migrations` (`migration`, `batch`) VALUES\n  ".$values.';';
+                $sql[] = '-- Safe to import more than once: a migration already logged is not inserted again.';
+                $sql[] = "INSERT INTO `migrations` (`migration`, `batch`)\nSELECT v.`migration`, v.`batch` FROM (\n  ".$values."\n) AS v\nWHERE NOT EXISTS (SELECT 1 FROM `migrations` m WHERE m.`migration` = v.`migration`);";
                 $sql[] = '';
             }
         }
