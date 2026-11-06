@@ -87,3 +87,45 @@ window.walletDateLabel = (value) => {
 
     return `${day} · ${time}`;
 };
+
+/*
+ * Installable app. The service worker (public/sw.js) caches only the static app shell;
+ * it never stores pages or money data. Wallet cannot save anything offline: while the
+ * device is offline, actions that need the server are stopped and the person is told.
+ */
+if ('serviceWorker' in navigator && window.isSecureContext) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(() => {});
+    });
+}
+
+const offlineMessage = "You're offline. Wallet can't save changes until you reconnect.";
+const tellPerson = (message) => window.dispatchEvent(new CustomEvent('toast', { detail: { message } }));
+
+window.addEventListener('offline', () => tellPerson(offlineMessage));
+window.addEventListener('online', () => tellPerson('Back online.'));
+
+const needsServer = (element) => {
+    for (let node = element; node instanceof Element; node = node.parentElement) {
+        if ([...node.attributes].some((attribute) => attribute.name.startsWith('wire:click') || attribute.name.startsWith('wire:submit'))) {
+            return true;
+        }
+    }
+
+    return false;
+};
+
+const stopWhenOffline = (event) => {
+    if (navigator.onLine) {
+        return;
+    }
+
+    if (event.type === 'submit' || needsServer(event.target)) {
+        event.preventDefault();
+        event.stopPropagation();
+        tellPerson(offlineMessage);
+    }
+};
+
+document.addEventListener('submit', stopWhenOffline, true);
+document.addEventListener('click', stopWhenOffline, true);

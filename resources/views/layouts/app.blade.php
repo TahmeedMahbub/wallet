@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#f8f9fa">
+    <x-pwa-head />
     <title>{{ $title ? $title.' · Wallet' : 'Wallet' }}</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
