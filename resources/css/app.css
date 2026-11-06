@@ -1,0 +1,227 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+/*
+|--------------------------------------------------------------------------
+| Fonts (self-hosted)
+|--------------------------------------------------------------------------
+| Inter is the only UI font. Inter has no Bengali taka sign, so a one-glyph
+| subset of Noto Sans Bengali supplies it; every device renders the same
+| shape instead of choosing its own fallback.
+*/
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('../fonts/inter-latin-wght-normal.woff2') format('woff2-variations');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+        U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: 'Taka';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('../fonts/taka-wght-normal.woff2') format('woff2-variations');
+    unicode-range: U+09F3;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Design tokens (Figma file PBdETgBZ0gCRrVtcYutMgD)
+|--------------------------------------------------------------------------
+| The default Tailwind theme is switched off. Only values that exist in the
+| Figma file are available, so an off-design value cannot be written by
+| accident. One spacing unit equals one Figma pixel: p-20 is 20px.
+|
+| Semantic roles used by the design, expressed with palette utilities:
+|   color/bg/brand          bg-blue-600       color/text/brand      text-blue-700
+|   color/bg/brand-subtle   bg-blue-50        color/text/primary    text-grey-900
+|   color/bg/brand-muted    bg-blue-100       color/text/secondary  text-grey-700
+|   color/bg/surface        bg-grey-0         color/border/default  border-grey-300
+|   color/icon/default      text-grey-700     color/icon/on-brand   text-grey-0
+*/
+@theme {
+    --*: initial;
+
+    --font-sans: 'Inter', 'Taka', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --default-font-family: var(--font-sans);
+    --default-mono-font-family: var(--font-mono);
+    --default-transition-duration: 150ms;
+    --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
+    --spacing: 1px;
+
+    --color-transparent: transparent;
+    --color-current: currentColor;
+
+    --color-blue-50: #e8f0fe;
+    --color-blue-100: #d2e3fc;
+    --color-blue-200: #aecbfa;
+    --color-blue-300: #8ab4f8;
+    --color-blue-400: #669df6;
+    --color-blue-500: #4285f4;
+    --color-blue-600: #1a73e8;
+    --color-blue-700: #1967d2;
+    --color-blue-800: #185abc;
+    --color-blue-900: #174ea6;
+
+    --color-grey-0: #ffffff;
+    --color-grey-50: #f8f9fa;
+    --color-grey-100: #f1f3f4;
+    --color-grey-300: #dadce0;
+    --color-grey-500: #9aa0a6;
+    --color-grey-700: #5f6368;
+    --color-grey-900: #202124;
+
+    --color-green-50: #e6f4ea;
+    --color-green-600: #1e8e3e;
+    --color-green-700: #188038;
+
+    --color-red-50: #fce8e6;
+    --color-red-500: #ea4335;
+    --color-red-700: #c5221f;
+
+    --color-yellow-50: #fef7e0;
+    --color-yellow-600: #f9ab00;
+    --color-orange-900: #b06000;
+
+    --color-today-marker: #fdd663;
+
+    --radius-2: 2px;
+    --radius-6: 6px;
+    --radius-12: 12px;
+    --radius-14: 14px;
+    --radius-16: 16px;
+    --radius-18: 18px;
+    --radius-20: 20px;
+    --radius-24: 24px;
+    --radius-32: 32px;
+    --radius-full: 999px;
+
+    --text-11: 11px;
+    --text-11--line-height: 14px;
+    --text-12: 12px;
+    --text-12--line-height: 16px;
+    --text-13: 13px;
+    --text-13--line-height: 18px;
+    --text-14: 14px;
+    --text-14--line-height: 20px;
+    --text-15: 15px;
+    --text-15--line-height: 21px;
+    --text-16: 16px;
+    --text-16--line-height: 22px;
+    --text-17: 17px;
+    --text-17--line-height: 24px;
+    --text-18: 18px;
+    --text-18--line-height: 25px;
+    --text-20: 20px;
+    --text-20--line-height: 28px;
+    --text-28: 28px;
+    --text-28--line-height: 39px;
+    --text-36: 36px;
+    --text-36--line-height: 50px;
+
+    --tracking-label: 0.4px;
+
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+
+    --shadow-fab: 0 6px 8px rgba(26, 115, 232, 0.28);
+    --shadow-toast: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+@layer base {
+    html {
+        -webkit-text-size-adjust: 100%;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+        background-color: var(--color-grey-100);
+        color: var(--color-grey-900);
+        font-synthesis: none;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    *,
+    ::before,
+    ::after {
+        border-color: var(--color-grey-300);
+    }
+
+    button,
+    [role='button'],
+    summary {
+        cursor: pointer;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--color-blue-600);
+        outline-offset: 2px;
+    }
+}
+
+@layer components {
+    /*
+     * Figma icons are exported as stroked SVG files with a fixed colour. They
+     * are used untouched as a mask, so geometry stays exactly as designed and
+     * the colour follows the CSS text colour (text-grey-700, text-blue-700…).
+     */
+    .icon {
+        display: inline-block;
+        flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+        background-color: currentColor;
+        -webkit-mask: var(--icon-url) center / 100% 100% no-repeat;
+        mask: var(--icon-url) center / 100% 100% no-repeat;
+    }
+
+    /* One line per Figma icon file in resources/svg/icons. */
+    .icon-home { --icon-url: url('../svg/icons/home.svg'); }
+    .icon-transactions { --icon-url: url('../svg/icons/transactions.svg'); }
+    .icon-budget { --icon-url: url('../svg/icons/budget.svg'); }
+    .icon-reports { --icon-url: url('../svg/icons/reports.svg'); }
+    .icon-plus { --icon-url: url('../svg/icons/plus.svg'); }
+    .icon-bell { --icon-url: url('../svg/icons/bell.svg'); }
+    .icon-chevron-left { --icon-url: url('../svg/icons/chevron-left.svg'); }
+    .icon-more { --icon-url: url('../svg/icons/more.svg'); }
+    .icon-savings { --icon-url: url('../svg/icons/savings.svg'); }
+    .icon-dues { --icon-url: url('../svg/icons/dues.svg'); }
+    .icon-eye { --icon-url: url('../svg/icons/eye.svg'); }
+    .icon-eye-off { --icon-url: url('../svg/icons/eye-off.svg'); }
+    .icon-chevron-right { --icon-url: url('../svg/icons/chevron-right.svg'); }
+    .icon-arrow-in { --icon-url: url('../svg/icons/arrow-in.svg'); }
+    .icon-arrow-out { --icon-url: url('../svg/icons/arrow-out.svg'); }
+    .icon-x { --icon-url: url('../svg/icons/x.svg'); }
+    .icon-check { --icon-url: url('../svg/icons/check.svg'); }
+    .icon-alert { --icon-url: url('../svg/icons/alert.svg'); }
+    .icon-info { --icon-url: url('../svg/icons/info.svg'); }
+    .icon-repeat { --icon-url: url('../svg/icons/repeat.svg'); }
+    .icon-back { --icon-url: url('../svg/icons/back.svg'); }
+    .icon-fab-plus { --icon-url: url('../svg/icons/fab-plus.svg'); }
+
+    /* Logo marks (Figma "Logo Mark" styles) in resources/svg/logo. */
+    .logo-mark {
+        display: inline-block;
+        flex-shrink: 0;
+        background: var(--logo-url) center / 100% 100% no-repeat;
+    }
+    .logo-mark-color { --logo-url: url('../svg/logo/mark-color.svg'); }
+    .logo-mark-mono { --logo-url: url('../svg/logo/mark-mono.svg'); }
+    .logo-mark-on-dark { --logo-url: url('../svg/logo/mark-on-dark.svg'); }
+    .logo-mark-white { --logo-url: url('../svg/logo/mark-white.svg'); }
+}
